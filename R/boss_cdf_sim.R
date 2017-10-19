@@ -1,4 +1,6 @@
-
+library(inline)
+library(compiler)
+library(doParallel)
 
 cpp_if_src <- '
   Rcpp::NumericVector xa(a);
@@ -28,7 +30,7 @@ correct_zero_combo_pvalues = function(combo_pvals){
 }
 
 
-pvalues_to_boss = function(univariate_pvs){
+pvalues_to_boss = function(univariate_pvs, boss_iters = 10000){
   
   ord_stat_pvals = sort(univariate_pvs)
   ord_stat_exp = -log(ord_stat_pvals)
@@ -38,9 +40,7 @@ pvalues_to_boss = function(univariate_pvs){
     sum_ord_stat_exp[j] = ord_stat_exp[j] + sum_ord_stat_exp[j-1]
   }
 
-  p_sum_ord_exp_sim_simul(sum_ord_stat_exp, iters = 10000)$ord_comb_pvs
-
-  
+  p_sum_ord_exp_sim_simul(sum_ord_stat_exp, iters = boss_iters)
 }
 
 sum_ordered_subset = function(ordered_subset){
@@ -104,8 +104,8 @@ true_pv_min = (1-(1-exp(-t_[1]))^n_)
 true_pv_fishers = pgamma(t_[n_], shape = n_ , rate = 1, lower.tail = F)
 pv_min_rel_err = relative_error(ord_comb_pvs[1], true_pv_min)
 pv_fishers_rel_err = relative_error(ord_comb_pvs[n_], true_pv_fishers)
-
-list(ord_comb_pvs = ord_comb_pvs, true_pv_min = true_pv_min, true_pv_fishers = true_pv_fishers, pv_min_rel_err = pv_min_rel_err, pv_fishers_rel_err = pv_fishers_rel_err)
+num_selected = which(min(ord_comb_pvs) == ord_comb_pvs)
+list(ord_comb_pvs = ord_comb_pvs, true_pv_min = true_pv_min, true_pv_fishers = true_pv_fishers, pv_min_rel_err = pv_min_rel_err, pv_fishers_rel_err = pv_fishers_rel_err, num_selected = num_selected)
 
 }
 
