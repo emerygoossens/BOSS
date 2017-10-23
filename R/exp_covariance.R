@@ -1,6 +1,7 @@
 #boss Functions
 #Expectation, Variance, and Covariance 
 #of the Sum of Exponential Order Statistics
+library(reliaR)
 
 eos.iid.var = function(index = 5,n_total = 6, lambda = 1){
 

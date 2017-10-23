@@ -1,5 +1,9 @@
 
 
+maha_is = function(
+
+
+
 sim_null = function(n = 1000, p = 10, sigma= diag(rep(1,p)),iters = 10, boss_iters = 10000, unused_cores = 2){
   num_cores =detectCores()- unused_cores
   print(paste("Starting Null Simulation for ",p," Parameters, ", iters, "Iterations Using ", num_cores, " Cores"), sep = "")
